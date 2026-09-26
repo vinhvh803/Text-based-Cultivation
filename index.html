@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cửu Châu Tu Tiên Lục - Terminal Edition</title>
+    <link rel="stylesheet" href="css/index.css">
+</head>
+<body>
+
+    <!-- PHẦN TRÊN: LOG TRUYỆN / TRẠNG THÁI -->
+    <div id="log-container">
+        <!-- Log khởi đầu sẽ tự chạy ra từ game.js thông qua queueLog -->
+    </div>
+
+    <!-- PHẦN DƯỚI: GIAO DIỆN ĐIỀU KHIỂN -->
+    <div id="control-container">
+        
+        <!-- Danh sách hành động (Actions) -->
+        <div id="action-list">
+            <button id="btn-meditate" onclick="meditate()"> Vận chuyển công pháp: Nạp Khí</button>
+        </div>
+
+        <!-- Bảng điều khiển / Menu hiển thị chỉ số (Ban đầu ẩn) -->
+        <div id="menu-panel">
+            <div>--------------------------------------------------</div>
+          
+            <!-- PHÂN VÙNG 1: HIỂN THỊ THÔNG SỐ MẶC ĐỊNH -->
+            <div id="stats-content">
+              <div>[CẢNH GIỚI]: <span id="stat-realm" class="log-important">Phàm Nhân</span></div>
+              <div>[LINH KHÍ]: <span id="stat-qi">0</span> / <span id="max-qi">10</span></div>
+          
+              <div class="stat-row" id="inventory-section" style="display: none;">
+                  [TÚI ĐỒ]: <span id="stat-stone">0</span> Linh Thạch | <span class="bag-trigger" onclick="toggleInventory()">[Mở Túi Đồ]</span>
+                  <!-- Ô hiển thị vật phẩm linh khí nghịch thiên -->
+                  <div id="relic-item" style="display: none;">
+                      ☠️ Di Vật Lạ (Ẩn giấu thiên cơ luân hồi) <span onclick="discardRelic()">[Vứt bỏ]</span>
+                  </div>
+              </div>
+
+              <!-- Thuộc tính Tuổi thọ & Linh căn ẩn (Chờ NPC mở khóa) -->
+              <div id="hidden-stats-section" style="display: none;">
+                  <div class="stat-row">[TUỔI THỌ]: <span id="stat-age">16</span> / <span id="stat-max-age">80</span> Tuổi</div>
+                  <div class="stat-row">[LINH CĂN]: <span id="stat-root" class="log-important">Đang ẩn</span></div>
+              </div>
+            </div>
+
+            <!-- PHÂN VÙNG 2: HIỂN THỊ KHO TÚI ĐỒ CHI TIẾT (MẶC ĐỊNH ẨN) -->
+            <div id="inventory-content">
+                <div class="log-important">[KHO TÚI ĐỒ CHI TIẾT]</div>
+                <div class="item-list-container" id="item-list">
+                    <!-- Vật phẩm chi tiết sẽ được sinh ra từ inventory.js ở đây -->
+                </div>
+                <button onclick="toggleInventory()">[X] Đóng Túi Đồ (Quay lại)</button>
+            </div>
+
+            <!-- GIAO DIỆN CHỌN NGHỊCH THIÊN KẾ THỪA KHI CHẾT -->
+            <div id="rebirth-section">
+                <div class="log-important">[LUÂN HỒI ĐIỆN] Hãy chọn 1 mảnh Nhân Quả để mang sang kiếp sau:</div>
+                <div class="rebirth-btn-group">
+                    <button onclick="chooseHeritage('realm')">1. Giữ lại [CẢNH GIỚI TU VI]</button>
+                    <button onclick="chooseHeritage('relic')">2. Giữ lại [TIỀN TÀI LINH THẠCH]</button>
+                    <button onclick="chooseHeritage('root')">3. Giữ lại [LINH CĂN THIÊN TƯ]</button>
+                </div>
+            </div>
+          
+            <!-- GIAO DIỆN CHỌN NGHỊCH THIÊN KẾ THỪA KHI CHẾT -->
+            <div id="rebirth-section">
+                <div class="log-important">[LUÂN HỒI ĐIỆN] Hãy chọn 1 mảnh Nhân Quả để mang sang kiếp sau:</div>
+                <div class="rebirth-btn-group">
+                    <button onclick="chooseHeritage('realm')">1. Giữ lại [CẢNH GIỚI TU VI] (Giữ cấp bậc)</button>
+                    <button onclick="chooseHeritage('relic')">2. Giữ lại [TIỀN TÀI LINH THẠCH] (Giữ túi đồ)</button>
+                    <button onclick="chooseHeritage('root')">3. Giữ lại [LINH CĂN THIÊN TƯ] (Giữ tư chất tốt)</button>
+                </div>
+            </div>
+          
+        </div>
+    </div>
+
+    <script src="js/story.js"></script>
+    <script src="js/inventory.js"></script>
+    <script src="js/index.js"></script>
+</body>
+</html>
