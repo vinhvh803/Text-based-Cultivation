@@ -185,3 +185,67 @@ button:disabled {
     text-decoration: underline;
     cursor: pointer;
 }
+
+/* Nghịch Thiên Cải Mệnh */
+#perk-section {
+    display: none; /* Mặc định ẩn */
+    border: 1px double #00ff00;
+    padding: 12px;
+    margin-top: 10px;
+    background-color: #050505;
+}
+
+#perk-btn-group button {
+    width: 100%;
+    text-align: left;
+    padding: 12px;
+    cursor: pointer;
+}
+
+/* Giao diện Cơ Duyên Các */
+#shop-content {
+    display: none; /* Mặc định ẩn */
+    border: 1px dashed #00ff00; /* Viền xanh lá tạo điểm nhấn cho khu chợ */
+    padding: 10px;
+    margin-top: 10px;
+    flex: 1;
+}
+
+#shop-item-list {
+    margin-top: 10px;
+    margin-bottom: 15px;
+    max-height: 25vh;
+    overflow-y: auto;
+}
+
+/* Giao diện Đấu Pháp Trường */
+#combat-content {
+    display: none; /* Mặc định ẩn */
+    border: 1px double #ff0000; /* Viền đỏ máu cảnh báo nguy hiểm */
+    padding: 12px;
+    margin-top: 10px;
+    background-color: #0a0000;
+}
+
+#combat-enemy-info {
+    margin-bottom: 12px;
+    line-height: 1.5;
+}
+
+#combat-player-hp {
+    margin-bottom: 12px;
+    font-weight: bold;
+    border-top: 1px dashed #333333;
+    padding-top: 8px;
+}
+
+#combat-skill-group button {
+    width: 100%;
+    text-align: left;
+    padding: 10px;
+    border-color: #ff0000;
+}
+#combat-skill-group button:active {
+    background-color: #ff0000;
+    color: #000000;
+}

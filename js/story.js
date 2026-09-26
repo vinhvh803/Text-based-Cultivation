@@ -97,6 +97,16 @@ const EXPLORE_EVENTS = [
         }
     },
     {
+        weight: 0.75,
+        execute: (state) => {
+            // Thay vì in text, chúng ta gọi hàm kích hoạt trận chiến từ combat.js bằng một luồng bất đồng bộ ngắn
+            setTimeout(() => {
+                if (typeof startCombat === 'function') startCombat();
+            }, 50);
+            return { text: "Yêu khí xung thiên nghẹt thở! Một bóng đen khổng lồ từ bụi rậm lao ra chặn đường...", type: 'log-important' };
+        }
+    },
+    {
         weight: 1.0,
         execute: (state) => {
             return { text: "Khu rừng vắng lặng, bạn không tìm thấy gì ngoài vài nhánh cỏ dại.", type: '' };

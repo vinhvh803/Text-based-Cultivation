@@ -31,17 +31,19 @@
               <div>[LINH KHÍ]: <span id="stat-qi">0</span> / <span id="max-qi">10</span></div>
           
               <div class="stat-row" id="inventory-section" style="display: none;">
-                  [TÚI ĐỒ]: <span id="stat-stone">0</span> Linh Thạch | <span class="bag-trigger" onclick="toggleInventory()">[Mở Túi Đồ]</span>
-                  <!-- Ô hiển thị vật phẩm linh khí nghịch thiên -->
-                  <div id="relic-item" style="display: none;">
-                      ☠️ Di Vật Lạ (Ẩn giấu thiên cơ luân hồi) <span onclick="discardRelic()">[Vứt bỏ]</span>
-                  </div>
+                  [TÚI ĐỒ]: <span id="stat-stone">0</span> Linh Thạch | 
+                  <span class="bag-trigger" onclick="toggleInventory()">[Mở Túi Đồ]</span>
+                  <span class="bag-trigger" style="color: #00ff00;" onclick="toggleShop()">[Ghé Cơ Duyên Các]</span>
               </div>
+
+              
 
               <!-- Thuộc tính Tuổi thọ & Linh căn ẩn (Chờ NPC mở khóa) -->
               <div id="hidden-stats-section" style="display: none;">
                   <div class="stat-row">[TUỔI THỌ]: <span id="stat-age">16</span> / <span id="stat-max-age">80</span> Tuổi</div>
                   <div class="stat-row">[LINH CĂN]: <span id="stat-root" class="log-important">Đang ẩn</span></div>
+                  <!-- Dòng hiển thị các Perk Nghịch Thiên đã nhận từ kiếp này -->
+                  <div class="stat-row">[KHÍ VẬN]: <span id="stat-perks-list" style="color: #00ff00;">Chưa thức tỉnh</span></div>
               </div>
             </div>
 
@@ -51,16 +53,37 @@
                 <div class="item-list-container" id="item-list">
                     <!-- Vật phẩm chi tiết sẽ được sinh ra từ inventory.js ở đây -->
                 </div>
+                <!-- Ô hiển thị vật phẩm linh khí nghịch thiên -->
+                <div id="relic-item" style="display: none;">
+                    ☠️ Di Vật Lạ (Ẩn giấu thiên cơ luân hồi) <span onclick="discardRelic()">[Vứt bỏ]</span>
+                </div>
                 <button onclick="toggleInventory()">[X] Đóng Túi Đồ (Quay lại)</button>
             </div>
 
-            <!-- GIAO DIỆN CHỌN NGHỊCH THIÊN KẾ THỪA KHI CHẾT -->
-            <div id="rebirth-section">
-                <div class="log-important">[LUÂN HỒI ĐIỆN] Hãy chọn 1 mảnh Nhân Quả để mang sang kiếp sau:</div>
-                <div class="rebirth-btn-group">
-                    <button onclick="chooseHeritage('realm')">1. Giữ lại [CẢNH GIỚI TU VI]</button>
-                    <button onclick="chooseHeritage('relic')">2. Giữ lại [TIỀN TÀI LINH THẠCH]</button>
-                    <button onclick="chooseHeritage('root')">3. Giữ lại [LINH CĂN THIÊN TƯ]</button>
+            <!-- PHẦN CƠ DUYÊN CÁC (NƠI MUA SẮM) -->
+            <div id="shop-content">
+                <div class="log-important" style="color: #00ff00;">[CƠ DUYÊN CÁC - THƯỢNG CỔ PHÁP BẢO]</div>
+                <div id="shop-item-list">
+                    <!-- Hàng hóa tự động sinh ra từ shop.js -->
+                </div>
+                <button onclick="toggleShop()">[X] Rời Cơ Duyên Các (Quay lại)</button>
+            </div>
+
+            <!-- GIAO DIỆN CHỌN NGHỊCH THIÊN CẢI MỆNH KHI ĐỘT PHÁ ĐẠI CẢNH GIỚI -->
+            <div id="perk-section">
+                <div class="log-important" style="color: #00ff00;">【 THIÊN ĐẠO LUÂN BÀN 】 Chọn 1 Vận Mệnh Nội Tại:</div>
+                <div id="perk-btn-group" class="rebirth-btn-group">
+                    <!-- 3 nút Perk ngẫu nhiên sẽ tự động render ra từ perks.js -->
+                </div>
+            </div>
+
+            <!-- GIAO DIỆN CHIẾN ĐẤU CHỮ THEO LƯỢT NGUYÊN TỐ (MỚI BỔ SUNG) -->
+            <div id="combat-content">
+                <div id="combat-enemy-info"></div>
+                <div id="combat-player-hp"></div>
+                <div style="font-size: 0.85rem; color: #888888; margin-bottom: 8px;">* Chọn chiêu thức Nguyên tố để kích hoạt Đột Phá Khắc Chế (x2 Sát thương)</div>
+                <div id="combat-skill-group" class="rebirth-btn-group">
+                    <!-- Nút kỹ năng khắc chế sẽ render từ combat.js -->
                 </div>
             </div>
           
@@ -80,5 +103,9 @@
     <script src="js/story.js"></script>
     <script src="js/inventory.js"></script>
     <script src="js/index.js"></script>
+    <script src="js/perks.js"></script>
+    <script src="js/shop.js"></script>
+    <script src="js/combat.js"></script>
+    
 </body>
 </html>

@@ -5,10 +5,13 @@ const gameState = {
     stones: 0,
     // Tính năng ẩn ban đầu
     age: 16,
-    maxAge: 18, // Đặt thọ nguyên phàm nhân ngắn lại (40 tuổi) để người chơi dễ test tính năng chết
+    maxAge: 18, // Đặt thọ nguyên phàm nhân ngắn lại (18 tuổi) để người chơi dễ test tính năng chết
     spiritRoot: "",
     hasRelic: false, // Sở hữu Di Vật Lạ
-    hasUnlockedStatsHidden: false
+    hasUnlockedStatsHidden: false,
+    qiMultiplier: 5, // <--- Thêm dòng này để tính tốc độ nạp khí bổ sung
+    hp: 20,
+    maxHp: 20 
 };
 
 let hasUnlockedMenu = false;
@@ -145,7 +148,10 @@ function meditate() {
     if (isBusy || gameState.qi >= gameState.maxQi) return;
     logImmediate(STORY_STRINGS.meditateStart);
     startProgressBar(REALMS_DATA[gameState.realmIndex].baseTime, () => {
-        gameState.qi += 1;
+        // Cộng linh khí dựa theo bí tịch đã học (mặc định là 1)
+        const gainedQi = gameState.qiMultiplier || 1;
+        gameState.qi = Math.min(gameState.maxQi, gameState.qi + gainedQi);
+
         logImmediate(STORY_STRINGS.meditateLog);
         passTime(5); // Tu luyện tốn 5 ngày thọ nguyên
 
@@ -183,7 +189,7 @@ function breakthrough() {
         gameState.maxQi = REALMS_DATA[gameState.realmIndex].req;
         
         // Đột phá tăng thọ nguyên cực hạn (Đúng chất Quỷ Cốc Bát Hoang)
-        gameState.maxAge += 50; 
+        gameState.maxAge += 2; // Mỗi cảnh giới tăng thêm 2 năm thọ nguyên
 
         logImmediate(`${STORY_STRINGS.breakthroughSuccess} [${REALMS_DATA[gameState.realmIndex].name}]! Thọ nguyên cực hạn tăng thêm 50 năm.`, "log-important");
         passTime(30);
@@ -196,8 +202,50 @@ function breakthrough() {
             addExploreAction();
             document.getElementById('inventory-section').style.display = 'block';
         }
+
+        // KIỂM TRA ĐẠI CẢNH GIỚI: Nếu đạt mốc Trúc Cơ Cảnh (realmIndex = 3)
+        if (gameState.realmIndex === 3) {
+            logImmediate("Thiên Lôi cuộn cuộn! Thiên Đạo Luân Bàn giáng thế, ban xuống Nghịch Thiên Cải Mệnh...", "log-important");
+            // Kích hoạt tính năng từ file perks.js và dừng tiến trình tại đây để đợi người chơi chọn
+            triggerPerkSelection(); 
+        } else {
+            // Nếu chỉ thăng cấp tiểu cảnh giới thông thường
+            finishBreakthroughLogic();
+        }
+
         updateUI();
     });
+}
+
+// Hàm bổ trợ chạy nốt logic thăng cấp sau khi đã chọn Perk xong (hoặc nâng cấp thường)
+function finishBreakthroughLogic() {
+    gameState.qi = 0;
+
+    gameState.maxHp += 15; // Tăng thêm 15 máu tối đa sau mỗi lần đột phá
+    gameState.hp = gameState.maxHp; // Hồi đầy máu khi lên cấp
+    
+    // Áp dụng giảm giá yêu cầu linh khí nếu có Perk "Linh Hải Cuồn Cuộn"
+    const discount = gameState.qiDiscount || 1;
+    gameState.maxQi = Math.floor(REALMS_DATA[gameState.realmIndex].req * discount);
+    
+    gameState.maxAge += 30; // Đột phá cơ bản tăng thọ nguyên
+
+    logImmediate(`${STORY_STRINGS.breakthroughSuccess} [${REALMS_DATA[gameState.realmIndex].name}]! Thọ nguyên cực hạn tăng thêm 30 năm.`, "log-important");
+    passTime(50);
+
+    const btn = document.getElementById('btn-breakthrough');
+    if (btn) btn.remove();
+
+    if (gameState.realmIndex === 1 && !hasUnlockedExplore) {
+        hasUnlockedExplore = true;
+        addExploreAction();
+        document.getElementById('inventory-section').style.display = 'block';
+    }
+    
+    // Vẽ lại danh sách Mệnh đã có
+    if (typeof renderActivePerksText === 'function') renderActivePerksText();
+    
+    updateUI();
 }
 
 function addExploreAction() {
@@ -215,11 +263,25 @@ function explore() {
     if (isBusy) return;
     logImmediate(STORY_STRINGS.exploreStart);
     startProgressBar(1500, () => {
-        passTime(15);
-        const rand = Math.random();
+        passTime(100);
+    
+        let rand = Math.random();
+    
+        // Nếu có Perk Khí Vận Chi Tử, dịch chuyển tỷ lệ xúc xắc để có lợi hơn cho người chơi
+        if (gameState.isLucky && rand > 0.3) {
+            rand = rand * 0.5; // Kéo thấp chỉ số ngẫu nhiên xuống các sự kiện nhặt đồ tốt (tỷ lệ 0.25 đầu)
+        }
+
         for (const event of EXPLORE_EVENTS) {
             if (rand < event.weight) {
                 const result = event.execute(gameState);
+
+                // Nhân đôi linh thạch nhặt được nếu có Perk may mắn
+                if (gameState.isLucky && result.text.includes("Hạ Phẩm Linh Thạch")) {
+                    gameState.stones += 2; // Tặng thêm linh thạch vụn
+                    result.text += " (Khí Vận Chi Tử khiến lượng linh thạch thu hoạch tăng thêm!)";
+                
+                }
                 logImmediate(result.text, result.type);
                 break;
             }
@@ -247,6 +309,8 @@ function chooseHeritage(choice) {
     gameState.age = 16;
     gameState.maxAge = 40; 
     gameState.qi = 0;
+    gameState.maxHp = 20;
+    gameState.hp = 20;
     gameState.hasRelic = false; // Mất di vật (phải đi nhặt lại)
     isDead = false;
     isBusy = false;
@@ -291,6 +355,13 @@ function chooseHeritage(choice) {
     }
     const btnBreak = document.getElementById('btn-breakthrough');if (btnBreak) btnBreak.remove();
     TIMELINE_EVENTS.forEach(event => event.hasTriggered = false);
+
+    // Xoá nghịch thiên cải mệnh
+    activePerks = [];
+    gameState.qiMultiplier = 1;
+    gameState.qiDiscount = 1;
+    gameState.isLucky = false;
+    if (typeof renderActivePerksText === 'function') renderActivePerksText();
 }
 
 function updateUI() {
@@ -322,8 +393,11 @@ function updateUI() {
     const btnExplore = document.getElementById('btn-explore');
     const btnBreakthrough = document.getElementById('btn-breakthrough');
 
+    const isShopOpenCurrently = (typeof isShopOpen !== 'undefined' && isShopOpen);
+    const isInCombatCurrently = (typeof isInCombat !== 'undefined' && isInCombat);
+
     // Nếu đang mở túi đồ hoặc đang bận/chết thì khóa các nút hành động chính lại
-    if (isBusy || isDead || isInventoryOpen) {
+    if (isBusy || isDead || isInventoryOpen || isShopOpenCurrently || isInCombatCurrently) {
         if (btnMeditate) btnMeditate.disabled = true;
         if (btnExplore) btnExplore.disabled = true;
         if (btnBreakthrough) btnBreakthrough.disabled = true;
