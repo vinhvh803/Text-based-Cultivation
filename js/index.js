@@ -93,9 +93,15 @@ function startProgressBar(duration, callback) {
 
 // Hàm tăng tuổi thọ ngẫu nhiên sau chuỗi hành động dài (mô phỏng thời gian trôi qua)
 function passTime(days = 1) {
+    if (isDead) return;
+
     // Cứ tích lũy thời gian thực tế, ở đây giả lập đơn giản: mỗi hành động tốn 10 ngày tuổi
     // 365 ngày = 1 tuổi
     gameState.age += (days / 365);
+    
+    // --- KIỂM TRA VÀ KÍCH HOẠT SỰ KIỆN TUYẾN TÍNH THEO THỜI GIAN ---
+    checkTimelineEvents();
+
     if (gameState.age >= gameState.maxAge) {
         logImmediate("[!] Thọ nguyên đã cạn. Cơ thể phế hoại, linh hồn tiêu tán... BẠN ĐÃ TỬ VONG.", "log-system");
        
@@ -113,6 +119,18 @@ function passTime(days = 1) {
             logImmediate("[!] Bạn không có bảo vật hộ mệnh hồn phách. Tu vi một đời tan thành mây khói. [Hệ thống: Hãy F5/Tải lại trang để trùng sinh hoàn toàn]", "log-important");
         }
     }
+}
+
+// Hàm quét qua danh sách sự kiện cố định trong story.js
+function checkTimelineEvents() {
+    TIMELINE_EVENTS.forEach(event => {
+        // Nếu sự kiện chưa từng xảy ra và thỏa mãn điều kiện thời gian/tuổi
+        if (!event.hasTriggered && event.trigger(gameState)) {
+            event.hasTriggered = true; // Đánh dấu đã dùng, không lặp lại
+            const result = event.execute(gameState);
+            logImmediate(result.text, result.type);
+        }
+    });
 }
 
 // Hàm chủ động vứt bỏ Di Vật Lạ
@@ -272,6 +290,7 @@ function chooseHeritage(choice) {
         document.getElementById('inventory-section').style.display = 'none';
     }
     const btnBreak = document.getElementById('btn-breakthrough');if (btnBreak) btnBreak.remove();
+    TIMELINE_EVENTS.forEach(event => event.hasTriggered = false);
 }
 
 function updateUI() {
