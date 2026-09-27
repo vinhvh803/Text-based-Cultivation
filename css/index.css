@@ -249,3 +249,39 @@ button:disabled {
     background-color: #ff0000;
     color: #000000;
 }
+
+/* Khung hiển thị giao diện Bản đồ */
+#map-content {
+    display: none; /* Mặc định ẩn */
+    border: 1px dashed #3b82f6; /* Viền xanh dương huyền ảo đại diện cho bản đồ thế giới */
+    padding: 10px;
+    margin-top: 10px;
+    flex: 1;
+}
+
+/* Khối hiển thị ma trận chữ ASCII */
+#map-grid {
+    font-family: 'Courier New', Courier, monospace;
+    line-height: 1.2;
+    letter-spacing: 2px;
+    background-color: #020202;
+    padding: 10px;
+    border: 1px solid #222222;
+    text-align: center; /* Căn giữa bản đồ */
+    margin-bottom: 12px;
+}
+
+/* Cụm nút bấm phím mũi tên điều hướng (D-Pad phong cách điện thoại) */
+.dpad-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 5px;
+    max-width: 180px;
+    margin: 0 auto 10px auto; /* Căn giữa cụm nút bấm điều hướng */
+}
+
+.dpad-container button {
+    text-align: center;
+    padding: 12px;
+    font-weight: bold;
+}

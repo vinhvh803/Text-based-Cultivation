@@ -77,6 +77,21 @@
                 </div>
             </div>
 
+            <!-- GIAO DIỆN BẢN ĐỒ LƯỚI ASCII THỰC TẾ (MỚI BỔ SUNG) -->
+            <div id="map-content">
+                <div class="log-important" style="color: #3b82f6;">【 CỬU CHÂU TINH ĐỒ 】</div>
+                <!-- Vùng vẽ ma trận text từ file map.js -->
+                <div id="map-grid"></div>
+                
+                <!-- Bộ nút bấm D-pad mô phỏng phím điều hướng trên điện thoại -->
+                <div class="dpad-container">
+                    <div></div><button onclick="movePlayer(0, -1)">▲</button><div></div>
+                    <button onclick="movePlayer(-1, 0)">◀</button><div></div><button onclick="movePlayer(1, 0)">▶</button>
+                    <div></div><button onclick="movePlayer(0, 1)">▼</button><div></div>
+                </div>
+                <button onclick="toggleMap()">[X] Thu hồi Bản đồ (Quay lại)</button>
+            </div>
+
             <!-- GIAO DIỆN CHIẾN ĐẤU CHỮ THEO LƯỢT NGUYÊN TỐ (MỚI BỔ SUNG) -->
             <div id="combat-content">
                 <div id="combat-enemy-info"></div>
@@ -106,6 +121,7 @@
     <script src="js/perks.js"></script>
     <script src="js/shop.js"></script>
     <script src="js/combat.js"></script>
+    <script src="js/map.js"></script>
     
 </body>
 </html>

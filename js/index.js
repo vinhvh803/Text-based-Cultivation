@@ -253,8 +253,9 @@ function addExploreAction() {
     const actionList = document.getElementById('action-list');
     const btn = document.createElement('button');
     btn.id = 'btn-explore';
-    btn.innerText = " Lén xuống núi tìm kiếm cơ duyên";
-    btn.onclick = explore;
+    // Đổi tên nút hành động thành xuất sơn mở bản đồ
+    btn.innerText = " 🧭 Xuất sơn: Mở Cửu Châu Tinh Đồ";
+    btn.onclick = toggleMap; // Kích hoạt hàm mở bản đồ từ file map.js
     actionList.appendChild(btn);
     logImmediate(STORY_STRINGS.unlockExplore, "log-important");
 }
@@ -314,6 +315,21 @@ function chooseHeritage(choice) {
     gameState.hasRelic = false; // Mất di vật (phải đi nhặt lại)
     isDead = false;
     isBusy = false;
+    playerX = 2;
+    playerY = 2;
+    // Reset lại các vị trí quái vật/khoáng thạch trên bản đồ thế giới cho kiếp mới thám hiểm
+    worldMap = [
+        ['#','#','#','#','#','#','#','#','#','#','#','#','#','#','#'],
+        ['#','.','.','.','.','#','.','.','.','.','.','.','.','.','#'],
+        ['#','.','H','.','.','#','.','.','X','.','.','.','.','.','#'],
+        ['#','.','.','.','.','.','.','.','.','.','#','#','#','.','#'],
+        ['#','#','#','.','.','.','.','.','.','.','#','$','#','.','#'],
+        ['#','.','.','.','.','#','#','#','.','.','#','.','#','.','#'],
+        ['#','.','X','.','.','#','.','.','.','.','.','.','.','.','#'],
+        ['#','.','.','.','.','#','.','.','.','.','.','.','.','.','#'],
+        ['#','.','.','$','.','.','.','.','X','.','.','.','.','.','#'],
+        ['#','#','#','#','#','#','#','#','#','#','#','#','#','#','#']
+    ];
 
     // Áp dụng đúng 1 khí vận được chọn để kế thừa sang kiếp sau
     if (choice === 'realm') {
@@ -395,9 +411,10 @@ function updateUI() {
 
     const isShopOpenCurrently = (typeof isShopOpen !== 'undefined' && isShopOpen);
     const isInCombatCurrently = (typeof isInCombat !== 'undefined' && isInCombat);
+    const isMapOpenCurrently = (typeof isMapMapOpen !== 'undefined' && isMapMapOpen);
 
     // Nếu đang mở túi đồ hoặc đang bận/chết thì khóa các nút hành động chính lại
-    if (isBusy || isDead || isInventoryOpen || isShopOpenCurrently || isInCombatCurrently) {
+    if (isBusy || isDead || isInventoryOpen || isShopOpenCurrently || isInCombatCurrently || isMapOpenCurrently) {
         if (btnMeditate) btnMeditate.disabled = true;
         if (btnExplore) btnExplore.disabled = true;
         if (btnBreakthrough) btnBreakthrough.disabled = true;
